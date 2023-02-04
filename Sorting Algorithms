@@ -1,0 +1,305 @@
+/*
+ * Programmer: DELDACAN, Lianne Francheska S.
+ * Date Created: 20/11/22
+ * Terminal No: 16
+ * Program: BSIT
+ * Course / Section: CSS122L/AM4
+ */
+
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+// variables
+int i;
+int row, col;
+const int sizeRow = 4;
+const int sizeCol = 5;
+
+// functions
+char getMenu(char ans);                      // returns the correct choice otherwise returns -1 if not.
+void getInput(int list[], int dim);          // input for both option 1 and 2
+void getBubble(int list[], int dim);         // perform the bubble sorting
+void getSelect(int list[], int dim);         // perform the selection sorting
+void convert2DimSort(int list[], int dim);   // convert one dimensional to 2-dimensional for both option 1 and 2
+void get2DOut(int list1[][sizeCol]);         // displaying the values in ascending and descending order 2-D
+void getHeap(int list3[], int dimen);        // process heapyfication or heap sort 1-D
+void tryAgain();                             // try again function
+void heapify(int list3[], int dimen, int i); // heapify function
+
+int main()
+{
+    // add code here
+    char choice, sagot;
+
+    do
+    {
+        // add code here
+        sagot = getMenu(choice);
+
+        switch (sagot)
+        {
+        case '1': // bubblesort
+        {
+            // add code here
+            int list[20], dim = 20;
+            cout << "Processing Bubble Sorting Technique..." << endl;
+            cout << "Enter 20 elements" << endl;
+
+            // call getInput function
+            getInput(list, dim);
+
+            // call getBubble function
+            getBubble(list, dim);
+
+            // call convert2DimSort
+            convert2DimSort(list, dim);
+        }
+        break;
+        case '2': // selectionsort
+        {
+            // add code here
+            int list2[20], dim = 20;
+            cout << "Processing Selection Sorting Technique..." << endl;
+            cout << "Enter 20 elements" << endl;
+
+            // call getInput function
+            getInput(list2, dim);
+
+            // call getSelect function
+            getSelect(list2, dim);
+
+            // call convert2DimSort
+            convert2DimSort(list2, dim);
+        }
+        break;
+        case '3': // heapsort
+        {
+            int list3[10], dim = 10;
+            cout << "Processing Heap Sorting Technique..." << endl;
+            cout << "Enter 10 numbers" << endl;
+
+            for (i = 0; i < 10; i++)
+            {
+                cout << "loc[" << i << "]: ";
+                cin >> list3[i];
+            };
+
+            // add code here
+            getHeap(list3, 10);
+
+            cout << endl
+                 << "Heapyfied values ..." << endl;
+            // add code here
+            for (int x = 0; x < 10; x++)
+            {
+                cout << list3[x] << endl;
+            }
+        }
+        break;
+        case '4':
+        {
+            cout << "end of program.....\n";
+            exit(1);
+        }
+        break;
+        }
+        tryAgain();
+
+    } while (choice != '4');
+}
+
+/////////////////////////////////
+char getMenu(char ans)
+{
+    // add code here
+    cout << "-------- SORTING --------" << endl;
+    cout << "[1] Bubble Sort" << endl;
+    cout << "[2] Selection Sort" << endl;
+    cout << "[3] Heap Sort" << endl;
+    cout << "[4] QUIT" << endl;
+    cout << "-------------------------" << endl;
+    cout << "Enter your choice: ";
+    cin >> ans;
+
+    return ans;
+}
+
+////////////////////////////////////
+void getInput(int list[], int dim) // for both option 1 and 2 only
+{
+    // add code here
+    for (i = 0; i < 20; i++)
+    {
+        cout << "loc[" << i << "]: ";
+        cin >> list[i];
+    }
+}
+
+//////////////////////////////////////
+void convert2DimSort(int list[], int dim)
+{
+    // add codehere
+    int inList[sizeRow][sizeCol];
+    row = 0, col = 0;
+
+    for (i = 0; i < 20; i++)
+    {
+        inList[row][col] = list[i];
+        if (col == 4)
+        {
+            row++;
+            col = 0;
+        }
+        else
+        {
+            col++;
+        }
+    }
+
+    get2DOut(inList);
+}
+
+////////////////////////////////////////////////
+void get2DOut(int list1[][sizeCol])
+{
+    cout << "Ascending Order\n";
+    // add code here
+    row = 0, col = 0;
+    for (i = 0; i < 20; i++)
+    {
+        cout << list1[row][col] << " ";
+        //cout << list1[row][col] << setw(1);
+        if (col == 4)
+        {
+            row++;
+            col = 0;
+            cout << endl;
+        }
+        else
+        {
+            col++;
+        }
+    }
+
+    cout << "\nDescending Order\n";
+    // add code here
+    row = 3, col = 4;
+    for (i = 0; i < 20; i++)
+    {
+        cout << list1[row][col] << " ";
+        //cout << list1[row][col] << setw(1); 
+        if (col == 0)
+        {
+            row--;
+            col = 4;
+            cout << endl;
+        }
+        else
+        {
+            col--;
+        }
+    }
+}
+
+////////////////////////////////////////////
+void getBubble(int list[], int dim)
+{
+    // solution to bubble sort
+    // add code here
+    for (int j = 0; j < dim - 1; j++)
+    {
+        for (int k = 0; k < dim - 1 - j; k++)
+        {
+            if (list[k] > list[k + 1])
+            {
+                // swap
+                int temp = list[k];
+                list[k] = list[k + 1];
+                list[k + 1] = temp;
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////
+void getSelect(int list[], int dim)
+{
+    // solution to selection sort
+    // add code here
+    for (int j = dim - 1; j > 0; j--)
+    {
+        int pos = 0;
+        for (int k = 1; k <= j; k++)
+        {
+            if (list[k] > list[pos])
+                pos = k;
+        }
+        // swap
+        int temp = list[j];
+        list[j] = list[pos];
+        list[pos] = temp;
+    }
+}
+
+//////////////////////////////////////////////
+void getHeap(int list3[], int dimen)
+{
+    for (int i = dimen / 2 - 1; i >= 0; i--)
+        heapify(list3, dimen, i);
+
+    for (int i = dimen - 1; i > 0; i--)
+    {
+        int temp = list3[0];
+        list3[0] = list3[i];
+        list3[i] = temp;
+
+        heapify(list3, i, 0);
+    }
+}
+
+void heapify(int list3[], int dimen, int i)
+{
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < dimen && list3[left] > list3[largest])
+        largest = left;
+
+    if (right < dimen && list3[right] > list3[largest])
+        largest = right;
+
+    if (largest != i)
+    {
+        // swap
+        int temp = list3[i];
+        list3[i] = list3[largest];
+        list3[largest] = temp;
+        heapify(list3, dimen, largest);
+    }
+}
+
+///////////////////////////////////////////////
+void tryAgain()
+{
+    char decision;
+    do
+    {
+        cout << "Do you want to try again[y/n]: ";
+        cin >> decision;
+        switch (decision)
+        {
+        case 'Y':
+        case 'y':
+            return;
+        case 'N':
+        case 'n':
+            cout << "leaving the program now....";
+            exit(1);
+            break;
+        }
+    } while (decision != 'N' || decision != 'n');
+}
