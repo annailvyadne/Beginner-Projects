@@ -1,0 +1,513 @@
+/*
+* Programmer: DELDACAN, Lianne Francheska S.
+* Date Created: 01/17/23
+* Terminal No: 16
+* Program: BSIT
+* Course / Section: CSS122L/AM4
+*/
+
+//libraries
+#include<iostream>
+#include<iomanip>
+#include<cstring>
+#include<algorithm>
+#include<cstdlib>
+using namespace std;
+#include<conio.h>
+#include<windows.h>
+string sort(string str);//reaaranging the orders of string to test if its anagram
+//process the strgin if anagram anf returns the value 1 or 0
+bool areAnagrams(string str1,string str2);
+
+//function that removes space and punctation in aa string
+string RemSpacePunct(string str);
+//testing whether the c-string value is palindrome or not
+void palindrome(char sal[120]);
+//asking the user to enter the password
+void password();
+//displaying choices a,b, and c then returns the answer
+char menu();
+//asking the user if he/she wants to quit
+void quit();
+//processing if the password is correct and diplaying it with "*" sign
+string EnterPassword();
+
+
+//main method
+int main()
+{
+		char let,ans;	
+
+char sal[120]; //Storage
+char choice_selected; //Selected Option
+string str;
+
+		password();	//calling the function for password
+
+		//looping process
+		do{
+			ans = menu();		//declaring variable ans in value of function menu
+			ans = tolower(ans);	//converting uppercase letter to lowercase
+				
+				/*if statement - checking if 
+				ans is either equal to character 
+			    a or b or c*/
+				if(!(ans == 'a'||ans == 'b'||ans == 'c'))	
+ 				{
+ 					//display statement if user input other characters
+					cout << "Invalid choice... " << endl
+					//display statement to remind user to repeat the process 
+						 << "Please try again.";
+					Sleep(500);								
+ 				}
+ 				
+ 				/*while if statement - checking 
+				if ans is either not equal to 
+				character a or b or c*/
+			}while(!(ans == 'a'||ans == 'b'||ans == 'c'));	
+															
+		cin.sync();	//removing any unread characters from the std input queue of characters
+
+switch(ans)		//switch case
+{
+
+		case 'a':	//case char a - palindrome case
+				{
+					palindrome(sal); 		//calling the function of palindrome
+					choice_selected = 'a'; /*if user inputs 'a', then it will 
+											directly lead to palindrome function */
+				}
+				break;
+
+		case 'b':	//case char b - anagram case
+				{
+					system("cls");	
+						cout << "[b] Check if strings are Anagram" << endl;	
+						cout << "Testing whether the following strings are anagrams: " << endl;	
+
+						cout << "enter string 1: ";	//asking user to input
+						/*extracts characters from the input stream and 
+						appends it to the string object until the 
+						delimiting character is encountered.*/
+						getline(cin,str);
+
+					sort(str); //calling function of sort 
+					//if user inputs 'b', then it will directly lead to anagram function
+					choice_selected = 'b'; 
+				}
+				break;
+				
+		case 'c':	//case char c - termination case
+				{
+					/*if user inputs 'c', then the program 
+					will end by calling the function of quit*/
+					quit(); 
+				}
+				break;
+								
+}
+ 
+ //looping process
+do{
+				cout << endl;
+				cout << "Do you want to try again [y/n]" << endl
+					 << "Choice: ";	
+				//input the choice and stores in variable let
+				cin >> let;
+				//converting the (if) let variable uppercase to lowercase		
+				let=tolower(let);	
+				}while(let!='n'&&let!='y');	
+				//if let is equal to char y
+				if (let == 'y')	
+				{
+					//if choice is equal to char a
+					if(choice_selected == 'a')	
+					{
+						do{
+						//removing any unread characters from the std input queue of characters
+								cin.sync();
+						//calling palindrome function 
+								palindrome(sal); 
+
+								do{
+								cout << endl;
+								cout << "Do you want to try again [y/n]" << endl
+									 << "Choice: ";	
+								cin >> let;	//input choice
+								let=tolower(let);
+								//converting the (if) let variable uppercase to lowercase	
+								}while(let!='n'&&let!='y');	
+						
+							if(let == 'n')	//if let is equal to char n
+								main();		//calling the main function
+					
+						}while(true);
+					}
+
+					else
+					{
+							do{
+								/*removing any unread characters from 
+								the std input queue of characters*/
+								cin.sync();
+								//clearing the system screen		
+								system("cls");	
+								cout << "[b] Check if strings are Anagram" << endl	
+									 <<"Testing wheter the following strings are anagrams:" << endl;
+									
+								cout << "enter string 1: ";
+								/*extracts characters from the input stream 
+								and appends it to the string object until 
+								the delimiting character is encountered*/
+								getline(cin,str);	
+	
+								sort(str); 	//sorting function
+
+
+								do{
+										cout << endl;
+										cout << "Do you want to try again [y/n]" << endl
+											 << "Choice: ";
+										cin>>let;	
+										let=tolower(let);	
+										}while(let!='n'&&let!='y');	
+
+								if (let == 'n')		
+										main();		
+
+							}while(true);
+						}
+					}
+				else
+				//calling main function
+					main();
+				//displaying "press any key to continue..." in console		
+					system("pause");	
+ 
+			return 0;
+		}
+		
+//////////////////////////////////////////////////////
+
+void quit()	//quit function
+{
+		char let;
+
+		do{
+			
+				cout << "Do you want to quit now? [y/n]" << endl
+					 << "Choice: ";	
+				cin>>let;	
+				let=tolower(let);	
+
+		}while(let!='n'&&let!='y');
+
+	if(let=='n')	
+		main();		
+	else
+ 		exit(0);
+}
+
+///////////////////////
+
+string EnterPassword()	//function for password
+{
+int ctr=0; 
+char temp;
+char P_storage[128];
+string input="";
+string password;
+string predetermined_password = "mapua";
+
+	do{
+		/* value of temp will directly convert a 
+		character to an integer based in ASCII values*/
+		temp = getch();		
+
+		//Password Blur
+			// [ASCII Values][Symbols]
+			// <space> ! " # $ % & ' ( ) * + , - . /
+			if ((temp >= 32 && temp <= 47) 
+			    // 0 1 2 3 4 5 6 7 8 9
+				||(temp >= 48 && temp <= 57) 
+				// : ; < = > ? @
+				||(temp >= 58 && temp <= 64)
+				// A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 
+				||(temp >= 65 && temp <= 90)
+				// [ \ ] ^ _ ` 
+				||(temp >= 91 && temp <= 96) 
+				// a b c d e f g h i j k l m n o p q r s t u v w x y z
+				||(temp >= 97 && temp <= 122)
+				// { | } ~ 
+				||(temp >= 123 && temp <= 126)) 
+			{
+				//variable P_storage[ctr] value is temporary value
+				P_storage[ctr] = temp;	
+				//incrementing integer by counter
+				ctr++;					 
+				cout << "*";
+			}
+
+			/*condition if temp is equal to 8 and ctr is 
+			greater than 1 or ctr is greater than 128*/
+			if ((temp==8 && ctr>=1) || ctr>=128) 	
+			{
+				cout << "\b \b";	
+				ctr--;	//decrementing counter
+				//variable P_storage[ctr] value is stored in char b
+				P_storage[ctr] = '\b';		
+			}
+			
+			if (temp==13) 	//if temporary value is equal to 13
+			{
+				//variable P_storage[ctr] value is stored in character 0
+				P_storage[ctr] = '\0'; 	
+				break;
+			}
+			
+	}while(true);
+	//input value is P_storage 
+	input = P_storage;
+	//checking if the input is equal to mapua word		
+	if(input == "mapua")
+	//then it's correct or true	
+		password = "correct";	
+	else
+		password = "incorrect";	//if not, then it's false
+/*the value of password will be the new value 
+of the function EnterPassword()*/
+return password; 	
+}
+
+////////////////////////////////////////////////////
+
+char menu()	//function main menu
+{
+		char choice;
+
+		system("cls");	//clearing the screen system
+		cout << "[a] Check the palindrome" << endl
+			 << "[b] Testing if strings are Anagrams" << endl
+			 << "[c] Quit" << endl
+			 << "Your choice: ";
+		cin >> choice;  
+		//value of variable choice will be the new value of function menu()	
+		return choice;	
+}
+
+//////////////////////////////////
+
+void password()	//function for password
+{
+	string password_validator; 
+	int attempt; 
+
+	do{
+			system("cls");	//clearing the system 
+			cout << "enter password:";
+			/*the value of function EnterPassword() 
+			from variable password is in the variable password_validator*/
+			password_validator = EnterPassword();	 
+			//checking condition if password_validator is incorrect
+				if (password_validator == "incorrect")	
+				{
+					if(attempt<2) 
+					{
+
+						system("cls");	//clearing the system
+						cout << "sorry incorrect password. . . ." << endl
+ 							<< "You have " << 2 - attempt << " tries remaining." << endl; 	
+						system("pause"); 
+						attempt++;	//if attempt is used, then add 1 attempt
+					}
+					else 
+					{
+						system("cls");	//clearing the system
+						cout << "sorry incorrect password. . . . " << endl
+ 							<< endl
+ 							<< "you have reached the maximum attempt for password.";	
+						exit(0);
+					}						
+				}
+				else
+	
+					break;
+	}while (true);
+}
+
+////////////////////////////////////////////////////////////////
+
+string sort(string str)	//sort function
+{
+		//Declarations
+		string str1, str2; 
+		string nospecchar_str1, nospecchar_str2; 
+		string lc_string1, lc_string2; 
+
+		//value of str is now in the variable str1
+		str1 = str; 	
+		/*value of RemSpacePunct(str) is now 
+		in variable nospacechar_str1*/
+		nospecchar_str1 = RemSpacePunct(str); 	
+		/*removing any unread characters 
+		from the std input queue of characters*/
+		cin.sync();		
+
+		cout << "enter string 2: ";	
+		getline(cin,str2); 		//getline for str2 
+		//value of RemSpacePunct(str2) is not in nospacechar_str2
+		nospecchar_str2 = RemSpacePunct(str2); 
+
+		//loop Declarations
+		int ctr; 
+		string display1 = str1; 
+		string display2 = str2; 
+
+		//String 1 Lowercase Loop
+		for(ctr = 0; ctr < nospecchar_str1.length(); ctr++)	
+		{
+			nospecchar_str1[ctr] = tolower(nospecchar_str1[ctr]); 
+		}
+		
+		//String 2 Lowercase Loop
+		/*for looping of counter from 0 value, ctr less 
+		than value or length of string in variable 
+		nospacechar_str2*/
+		for(ctr = 0; ctr < nospecchar_str2.length(); ctr++)	
+		{
+			//value of nospacechar_str2[ctr] is converted into lowercase
+			nospecchar_str2[ctr] = tolower(nospecchar_str2[ctr]); 
+		}
+		//value of nospacechar_str1 is in str1
+		str1 = nospecchar_str1; 
+		//value of nospacechar_str2 is in str2
+		str2 = nospecchar_str2; 
+		
+		//sorting process
+		sort(str1.begin(), str1.end()); 	
+ 		sort(str2.begin(), str2.end()); 
+
+		//Final Display
+ 		cout << "string 1: " << display1 << endl 
+ 			 << "string 2: " << display2 << endl; 
+
+			//validation (if true or false)
+			/*checking condition, if strings 1 
+			and strings 2 is true, they are anagrams*/
+			if (areAnagrams(str1, str2)) 
+ 				cout << "They are anagrams!";
+			else 
+			/*checking condition, if strings 1 and strings 
+			2 is false, they are anagrams*/
+				cout << "They are NOT anagrams.";
+	
+		cout << endl;
+		return str;	 
+}
+
+//////////////////////////////
+
+bool areAnagrams(string str1,string str2)	//function for Anagrams
+{
+		int string1 = str1.length();
+		int string2 = str2.length();
+/*checking condition if string1 is not equal to string 2, 
+the value of the bool areAnagrams function is false*/
+		if(string1 != string2) 	
+		//the value of bool in function areAnagrams is false
+			return false; 		
+		for (int i = 0; i < string1; i++)
+//if str1[i] is not equal to str2[i] 	
+ 			if (str1[i] != str2[i])
+//the value of bool in function areAnagrams is false			
+ 				return false; 				
+//the value of bool in function areAnagrams is true
+		return true; 	
+}
+
+//////////////////////////////
+
+string RemSpacePunct(string str)	//function for RemSpacePunct
+{
+		for (int i=0; i<str.size(); i++)
+ 		{
+ 			// <space> ! " # $ % & ' ( ) * + , - . /	
+ 			if ((str[i] >= 32 && str[i] <= 47)
+			 // : ; < = > ? @ 	
+					|| (str[i] >= 58 && str[i] <= 64)
+					// [ \ ] ^ _ ` 					
+					|| (str[i] >= 91 && str[i] <= 96)
+					// { | } ~ 					
+					|| (str[i] >= 123 && str[i] <= 126)) 						
+ 			{
+ 				str.erase(i, 1); 
+			 	i--;	
+ 			}
+ 		}
+ 		return str;	
+}
+
+///////////////////////////////
+
+void palindrome(char sal[120])	//function for palindrome
+{
+		char temp; 				//Temporary character
+		string word; 			//Word to be reversed
+		string nospecchar_word; //Removes special characters from the word
+		string rev_word; 		//The word in reversed order
+		string final_word; 		//Displays the word input
+		string final_rev; 		//Displays the reversed order
+
+		do{
+				system("cls");	//system clear screen
+				cout << "[a] Check the palindrome" << endl;	
+				cout << "Input the word: ";
+				getline(cin, word);			
+				//value of nospacechar_word is now in RemSpacePunct(word)
+				nospecchar_word = RemSpacePunct(word); 
+
+				if (nospecchar_word == "") 
+				{
+					cout << "Invalid input... Please try again.";	
+					Sleep(500);
+				}
+		}while(nospecchar_word == "");
+		//value of nospacechar_word is in the final_word	
+			final_word = nospecchar_word; 
+
+		for(int ctr = 0 ; ctr < final_word.length(); ctr++) 
+			{
+				final_word[ctr] = tolower(final_word[ctr]);	 
+			}
+		//size of nospacechar_word added to 1
+		sal[nospecchar_word.size() + 1]; 
+		strcpy(sal, nospecchar_word.c_str()); 
+
+		int y = strlen(sal) - 1;
+		
+		for (int x = 0; x < y; x++,y--) 	
+		{
+			//swap
+			//temporary value is in variable sal[x]
+ 			temp = sal[x];
+			//value of variable sal[x] is in sal[y]	
+ 			sal[x] = sal[y]; 
+ 			//sal[y] value is in temp
+ 			sal[y] = temp;	
+ 		}
+ 		//value of sal is in rev_word
+ 		rev_word = sal;	
+ 		//value of rev_word from sal is in final_rev
+		final_rev = rev_word;	
+		//system clear screen
+		system("cls");	
+		cout << "[a] Check the palindrome" << endl
+			 << "Input the word: "<<nospecchar_word << endl
+ 			 << "In Reverse Order: " << rev_word<<endl;
+
+ 	if(final_word==final_rev)	//if final_word is equal to final_rev then it's palindrome
+ 		cout << "The word is palindrome!" << endl;
+ 	else
+ 		cout << "The word is not a palindrome." << endl;	//if it's false, then it's not palindrome
+
+}
