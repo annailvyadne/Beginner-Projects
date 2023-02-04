@@ -1,0 +1,302 @@
+/*
+ * Programmer: DELDACAN, Lianne Francheska S.
+ * Date Created: 12/02/22
+ * Terminal No: 16
+ * Program: BSIT
+ * Course / Section: CSS122L/AM4
+ */
+
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+// global declaration
+int i;
+const int SIZE = 10;
+typedef double *pointers; // typedefinition used for miles per gallon pointer variables
+
+// prototype
+// for grade elimination
+void getInput(double *input); // prompt the user to input 10 grades
+double getLow(double *low);   // compute and returns the value of the lowest grade
+double getSum(double *sum);   // compute for the sum of 10 grades
+double getAve(double *ave);   // compute for the sum of 10 grades
+
+void tryAgain();
+
+// choices and try again
+char getChoice(char *ch); // display the menu of choices and input the choice of the user
+
+// miles per gallon
+void MilesPerrGallon(double *ptr1, double *ptr2, int sz); // final output of the computer miles
+// and gallons
+
+void MperG(); // prompts the user to specify the size of the array for miles and gallons
+
+// verify and validate the input for miles and gallons using exception handling
+int main()
+{
+    // add only declaration here
+    char choice, *chr, opt;
+    do
+    {
+        chr = &choice;
+        opt = getChoice(chr);
+        switch (*chr)
+        {
+        case '1':
+        {
+            double grade[SIZE];
+            double *ptr;
+            double *plow, *psum, *pave;
+            double gsum, glow;
+            double ave;
+            system("cls");
+            // add declaration here
+            cout << "Choice[1]:Grade Elimination" << endl;
+            // add code here
+            // NOTE ALL CODES MUST USE pointer variables –input,process and
+            // output
+            getInput(grade);
+
+            gsum = getSum(grade);
+            psum = *&grade;
+            cout << "you entered: " << endl; // displaying the inputted grades
+            for (i = 0; i < SIZE; i++)
+            {
+                cout << "grade[" << i + 1 << "]: " << psum[i];
+                cout << endl;
+            }
+            cout << "sum = " << gsum << endl;
+
+            glow = getLow(psum);
+            ptr = new double[9];
+            plow = *&ptr;
+            int j = 0;
+            for (i = 0; i < SIZE; i++)
+            {
+                if (glow != grade[i])
+                {
+                    ptr[j] = grade[i];
+                    j++;
+                }
+            }
+            cout << "lowest = " << glow << endl;
+
+            pave = *&plow;
+            ave = getAve(pave);
+            cout << setprecision(2) << fixed;
+            cout << "average = " << ave << endl;            
+        }
+        break;
+        case '2':
+            cout << "COMPUTING FOR MPG : miles per gallon..." << endl;
+            MperG();
+            break;
+        case '3':
+            cout << "goodbye for now....\n";
+            system("pause");
+            exit(1);
+            break;
+        }
+        // Add code here
+        cout << endl;
+        system("pause");
+
+        tryAgain();
+
+    } while (opt != '3');
+    return 0;
+}
+
+///////////////////////////
+char getChoice(char *ch)
+{
+    // add code here
+    system("cls");
+    cout << "<<<<<<<<<<MENU>>>>>>>>>>" << endl;
+    cout << "[1] score of 10 quizzes" << endl;
+    cout << "[2] miles per gallon" << endl;
+    cout << "[3] to quit" << endl;
+    cout << "enter your choice: ";
+    cin >> ch;
+    return *ch;
+}
+
+//////////////////////////////
+void getInput(double *input)
+{
+    cout << "enter " << SIZE << " grades" << endl; // asking the user to input grades
+    for (i = 0; i < SIZE; i++)
+    {
+        cout << "grade[" << i << "]:";
+        cin >> input[i];
+    }
+}
+
+/////////////////////////////
+double getSum(double *sum)
+{
+    double add = 0;
+    // add code here
+    for (i = 0; i < SIZE; i++)
+    {
+        add = add + sum[i];
+    }
+
+    return add;
+}
+
+////////////////////////////////
+double getLow(double *low)
+{
+    double baba;
+    // add code here
+    baba = *low;
+
+    for (i = 1; i < SIZE; i++)
+    {
+        if (baba > low[i])
+            baba = low[i];
+    }
+
+    return baba;
+}
+
+////////////////////////////////
+double getAve(double *newGrade)
+{
+    double ave = 0;
+    // add code here
+    for (i = 0; i < SIZE - 1; i++)
+    {
+        ave = ave + newGrade[i];
+    }
+
+    return ave / (SIZE - 1);
+}
+
+/////////////////////////
+void MperG()
+{
+    int ctr;
+    pointers milPtr, galPtr;
+    int msize;
+    system("cls");
+
+    // add code here
+    cout << "Specify the size of the array:";
+    cin >> msize;
+
+    try
+    {
+        // add code here
+        if (msize < 5 || msize > 15)
+        {
+            throw((double)msize);
+        }
+        milPtr = new double[msize];
+        cout << "MILES" << endl;
+        for (ctr = 0; ctr < msize; ctr++)
+        {
+            bool ans = true;
+            while (ans)
+            {
+                cout << "miles[" << ctr << "]: ";
+                cin >> milPtr[ctr];
+
+                if (milPtr[ctr] < 100 || milPtr[ctr] > 250)
+                {
+                    ans = true;
+                    cout << setprecision(2) << fixed;
+                    cout << milPtr[ctr] << " is invalid!.. 100-250 only" << endl;
+                    cout << "reenter new value" << endl;
+                }
+                else
+                {
+                    ans = false;
+                }
+            }
+        }
+
+        galPtr = new double[msize];
+        cout << "\nGALLONS" << endl;
+        for (ctr = 0; ctr < msize; ctr++)
+        {
+            bool ans = true;
+            while (ans)
+            {
+                cout << "miles[" << ctr << "]: ";
+                cin >> galPtr[ctr];
+
+                if (galPtr[ctr] < 5 || galPtr[ctr] > 25)
+                {
+                    ans = true;
+                    cout << setprecision(2) << fixed;
+                    cout << galPtr[ctr] << " is invalid!.. 5-25 only" << endl;
+                    cout << "reenter new value" << endl;
+                }
+                else
+                {
+                    ans = false;
+                }
+            }
+        }
+
+        MilesPerrGallon(milPtr, galPtr, msize);
+
+    } // end try
+    catch (double e)
+    {
+        // add code here
+        MperG();
+
+    } // end catch
+
+} // loop for miles
+
+////////////////////////
+void MilesPerrGallon(double *ptr1, double *ptr2, int sz)
+{
+    double mpg[sz];
+    pointers mpgPtr = (double *)malloc(sz);
+    int index;
+    // add code here
+    mpgPtr = new double[sz + 1];
+    mpgPtr = *&mpg;
+    cout << "\nmile       /   gallon  =   MPG" << endl;
+    for (i = 0; i < sz; i++)
+    {
+        mpgPtr[i] = ptr1[i] / ptr2[i];
+        cout << setprecision(2) << fixed;
+        cout << ptr1[i] << "   /   " << ptr2[i] << "  =   " << mpg[i] << endl;
+    }
+
+    mpgPtr = NULL;
+    delete[] mpgPtr;
+    delete[] ptr1;
+    delete[] ptr2;
+}
+
+///////////////////////////////////////////////
+void tryAgain()
+{
+    char decision;
+    do
+    {
+        cout << "Do you want to try again[y/n]: ";
+        cin >> decision;
+        switch (decision)
+        {
+        case 'Y':
+        case 'y':
+            return;
+        case 'N':
+        case 'n':
+            cout << "leaving the program now....";
+            exit(1);
+            break;
+        }
+    } while (decision != 'N' || decision != 'n');
+}
