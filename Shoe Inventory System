@@ -1,0 +1,222 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <cstring>
+#include <stdexcept>
+#include <sstream>
+#include <vector>
+#define FILE_NAME "shoeInventory.txt"
+
+using namespace std;
+
+const int SIZE = 1;
+
+struct DatePurchase
+{
+    int month;
+    int day;
+    int year;
+};
+
+struct ShoeRec
+{
+    string StockNumber;
+    string ShoeType;
+    string ShoeBrand;
+    DatePurchase datePurchased;
+    int ShoeQuantity;
+    float ShoeCost;
+    float TotalValue;
+};
+
+void inputShoe(ShoeRec getshoe[]);
+void compVal(ShoeRec tValue[]);
+void writeToFile(ShoeRec tValue[]);
+bool validateStockNumber(string StockNumber);
+bool validateShoeQuantity(int ShoeQuantity);
+bool validateDatePurchase(DatePurchase datePurchased);
+
+int main()
+{
+    ShoeRec shoe[SIZE];
+
+    inputShoe(shoe);
+    compVal(shoe);
+    writeToFile(shoe);
+
+    return 0;
+}
+
+void inputShoe(ShoeRec getshoe[])
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        cout << "Enter shoe record #" << i + 1 << ":" << endl;
+
+        do
+        {
+
+            try            
+            {
+                cout << "StockNumber (8 characters only): ";
+                cin >> getshoe[i].StockNumber;
+
+                if (!validateStockNumber(getshoe[i].StockNumber))
+                {
+                    string errorMessage = "Invalid StockNumber. Please enter a valid StockNumber (8 characters only): ";
+                    throw errorMessage;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            catch(string& e)
+            {
+                std::cerr << e << '\n';
+            }
+
+        } while(true);
+
+        cout << "ShoeType: ";
+        cin >> getshoe[i].ShoeType;
+
+        cout << "ShoeBrand: ";
+        cin >> getshoe[i].ShoeBrand;
+
+        do
+        {
+
+            try            
+            {
+                string datePurchased;    
+                string datePart;
+                cout << "Date of purchase (MM/DD/YYYY): ";
+				cin >> datePurchased;            
+                vector<int> dateParts;
+                stringstream ss(datePurchased);
+                
+                while (getline(ss, datePart, '/')) {
+                    dateParts.push_back(stoi(datePart));
+                }
+                
+                getshoe[i].datePurchased.month = dateParts.at(0);
+                getshoe[i].datePurchased.day = dateParts.at(1);
+                getshoe[i].datePurchased.year = dateParts.at(2);                  
+
+                if (!validateDatePurchase(getshoe[i].datePurchased))
+                {
+                    string errorMessage = "Invalid date of purchase. Please enter a valid date of purchase.";
+                    throw errorMessage;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            catch(string& e)
+            {
+                std::cerr << e << '\n';
+            }            
+
+        } while(true);
+
+        do
+        {
+
+            try            
+            {
+                cout << "ShoeQuantity (5-50 only): ";
+				cin >> getshoe[i].ShoeQuantity;
+
+                if (!validateShoeQuantity(getshoe[i].ShoeQuantity))
+                {
+                    string errorMessage = "Invalid ShoeQuantity. Please enter a valid ShoeQuantity (5-50 only): ";
+                    throw errorMessage;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            catch(string& e)
+            {
+                std::cerr << e << '\n';
+            }         
+
+        } while(true);
+
+        cout << "ShoeCost (PHP): ";
+        cin >> getshoe[i].ShoeCost;
+
+        cout << endl;
+    }
+}
+
+void compVal(ShoeRec tValue[])
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        tValue[i].TotalValue = tValue[i].ShoeCost * tValue[i].ShoeQuantity;
+    }
+}
+
+void writeToFile(ShoeRec tValue[])
+{
+    ifstream verifyfile(FILE_NAME);
+    bool isFileExists = (verifyfile.good()) ? true : false;
+    if(isFileExists)
+    {
+        verifyfile.close();
+    }
+
+    ofstream outFile;
+    outFile.open(FILE_NAME, ios::app);
+
+    if(!isFileExists)
+    {
+        outFile << setw(12) << "StockNumber" << setw(12) << "ShoeType" << setw(12) << "ShoeBrand"
+                << setw(12) << "DatePurchase" << setw(12) << "ShoeQuantity" << setw(12) << "ShoeCost"
+                << setw(12) << "TotalValue" << endl;
+    }
+    for (int i = 0; i < SIZE; i++)
+    {
+        outFile << setw(12) << tValue[i].StockNumber << setw(12) << tValue[i].ShoeType
+                << setw(12) << tValue[i].ShoeBrand << setw(12)
+                << tValue[i].datePurchased.month << "/" << tValue[i].datePurchased.day << "/"
+                << tValue[i].datePurchased.year << setw(12) << tValue[i].ShoeQuantity << setw(12)
+                << " Php" << fixed << showpoint << setprecision(2) << tValue[i].ShoeCost << setw(12) 
+                << " Php" << fixed << showpoint << setprecision(2) << tValue[i].TotalValue << endl;
+    }
+
+    outFile.close();
+}
+
+bool validateStockNumber(string StockNumber)
+{
+    if (StockNumber.length() != 8)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool validateShoeQuantity(int ShoeQuantity)
+{
+    if (ShoeQuantity < 5 || ShoeQuantity > 50)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool validateDatePurchase(DatePurchase datePurchased)
+{
+    if (datePurchased.month < 1 || datePurchased.month > 12 || datePurchased.day < 1 ||
+        datePurchased.day > 31 || datePurchased.year < 2000 || datePurchased.year > 2021)
+    {
+        return false;
+    }
+    return true;
+}
